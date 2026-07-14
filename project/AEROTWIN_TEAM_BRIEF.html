@@ -1,0 +1,194 @@
+<title>AeroTwin — Team Reference Brief</title>
+<style>
+  :root {
+    --page: #f4f5f2; --surface: #ffffff; --surface-2: #eceee9;
+    --text-primary: #10151a; --text-secondary: #4d5761; --text-muted: #818b93;
+    --border: rgba(16,20,24,0.12); --accent: #0d9488; --accent-soft: rgba(13,148,136,0.10);
+    --accent-2: #d9622b; --good: #0ca30c; --warning: #c98400; --serious: #c65a2e; --critical: #d03b3b;
+    --good-soft: rgba(12,163,12,0.10); --warning-soft: rgba(201,132,0,0.10);
+    --serious-soft: rgba(198,90,46,0.10); --critical-soft: rgba(208,59,59,0.10);
+    --mono: ui-monospace, "SF Mono", Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#0c1013; --surface:#141a1f; --surface-2:#1a2128; --text-primary:#eef1f3; --text-secondary:#a7b0b8; --text-muted:#6b7684; --border:rgba(255,255,255,0.10); --accent:#2ba89c; --accent-soft:rgba(43,168,156,0.14); }
+  }
+  :root[data-theme="dark"] { --page:#0c1013; --surface:#141a1f; --surface-2:#1a2128; --text-primary:#eef1f3; --text-secondary:#a7b0b8; --text-muted:#6b7684; --border:rgba(255,255,255,0.10); --accent:#2ba89c; --accent-soft:rgba(43,168,156,0.14); }
+  :root[data-theme="light"] { --page:#f4f5f2; --surface:#ffffff; --surface-2:#eceee9; --text-primary:#10151a; --text-secondary:#4d5761; --text-muted:#818b93; --border:rgba(16,20,24,0.12); --accent:#0d9488; --accent-soft:rgba(13,148,136,0.10); }
+
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--page); color:var(--text-primary); font-family:var(--sans); line-height:1.6; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-family: var(--mono); font-size: 26px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 4px; }
+  .meta { color: var(--text-muted); font-size: 12.5px; font-family: var(--mono); margin-bottom: 30px; }
+  h2 { font-family: var(--mono); font-size: 16px; font-weight: 700; margin: 42px 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); color: var(--text-primary); }
+  h3 { font-family: var(--mono); font-size: 13px; font-weight: 700; margin: 22px 0 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.03em; }
+  p { color: var(--text-secondary); font-size: 14px; max-width: 76ch; }
+  a { color: var(--accent); }
+  .lead { font-size: 15.5px; color: var(--text-primary); background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 14px 16px; border-radius: 0 8px 8px 0; margin-bottom: 6px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 8px; font-size: 13px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 600; }
+  td { color: var(--text-secondary); }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--text-primary); }
+  tr:hover td { background: var(--surface-2); }
+  .tblwrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 4px 14px; }
+
+  .pill { display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; }
+  .pill.done { background: var(--good-soft); color: var(--good); }
+  .pill.new { background: var(--accent-soft); color: var(--accent); }
+  .pill.caveat { background: var(--warning-soft); color: var(--warning); }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+  .card h4 { font-family: var(--mono); font-size: 12.5px; margin: 0 0 6px; color: var(--text-primary); }
+  .card p { font-size: 12.5px; margin: 0; }
+
+  ul { color: var(--text-secondary); font-size: 14px; padding-left: 20px; }
+  li { margin-bottom: 5px; }
+  code { font-family: var(--mono); font-size: 0.92em; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+
+  .callout { border-left: 3px solid var(--critical); background: var(--critical-soft); border-radius: 0 8px 8px 0; padding: 12px 15px; font-size: 13px; color: var(--text-primary); margin: 10px 0; }
+  .callout.good { border-left-color: var(--good); background: var(--good-soft); }
+  .toc { columns: 2; font-size: 13px; }
+  @media (max-width: 600px) { .toc { columns: 1; } }
+  .toc a { display:block; padding: 3px 0; color: var(--text-secondary); text-decoration:none; }
+  .toc a:hover { color: var(--accent); }
+  .linkbtn { display:inline-block; font-family:var(--mono); font-size:12.5px; font-weight:700; background:var(--accent); color:white; padding:9px 16px; border-radius:8px; text-decoration:none; margin-top:6px; }
+</style>
+
+<div class="wrap">
+  <h1>AEROTWIN — TEAM REFERENCE BRIEF</h1>
+  <div class="subtitle">Physics-Informed Digital Twin for Real-Time Four-Stage Turbojet Health Monitoring</div>
+  <div class="meta">Aerothon 2026 · HAL × IIT Indore · PS-2 &nbsp;|&nbsp; Prepared for team review ahead of PPT drafting</div>
+
+  <div class="lead">Read this end-to-end before we write the PPT together. Everything in the feature table below is <strong>built, running, and verified against real data</strong> — nothing here is a plan or a mockup. Where we made an honest simplification or found a limitation, it's flagged explicitly, not hidden.</div>
+
+  <p><a href="https://claude.ai/code/artifact/cadc652b-44bb-4cd9-8f3f-989188551a7f" class="linkbtn">→ Open the live AeroTwin dashboard</a></p>
+
+  <h2>Contents</h2>
+  <div class="toc">
+    <a href="#overview">1. One-line product summary</a>
+    <a href="#architecture">2. System architecture (3 stages)</a>
+    <a href="#features">3. Full feature list</a>
+    <a href="#metrics">4. Validation metrics (real numbers)</a>
+    <a href="#discoveries">5. Key findings from our own EDA</a>
+    <a href="#honesty">6. Honest disclosures &amp; limitations</a>
+    <a href="#mapping">7. PS-2 requirement mapping</a>
+    <a href="#ppt">8. PPT slide mapping (what goes where)</a>
+    <a href="#open">9. Open items before submission</a>
+  </div>
+
+  <h2 id="overview">1. One-line product summary</h2>
+  <p><strong>AeroTwin</strong> is a hybrid physics + machine-learning digital twin that estimates the health of a four-stage turbojet's compressor, combustor, and turbine from gas-path sensor readings, predicts performance (thrust/fuel consumption), detects faults in real time, and recommends maintenance — presented through an interactive dashboard with a live 3D engine model.</p>
+  <p>Positioning: most competing teams will submit a black-box ML model on the C-MAPSS-style dataset. We differentiate by building an actual physics layer (a 0-D thermodynamic gas-path solver), which is what makes health estimates interpretable, enables real anomaly detection, and let us discover the dataset's exact underlying structure.</p>
+
+  <h2 id="architecture">2. System architecture</h2>
+  <div class="grid2">
+    <div class="card"><h4>Stage A — Physics Layer</h4><p>0-D Brayton-cycle gas-path inversion (compressor/turbine isentropic efficiency, combustor pressure retention) computed per-cycle from sensor readings. No training required — closed-form thermodynamics.</p></div>
+    <div class="card"><h4>Stage B — Two Prediction Modes</h4><p><strong>Flight-Log Match</strong>: exact per-engine reconstruction (discovered deterministic degradation law). <strong>Fleet Baseline Estimate</strong>: hierarchical population+engine trend, monotonic-constrained gradient boosting residual, conformal uncertainty — generalizes to a brand-new engine.</p></div>
+    <div class="card"><h4>Stage C — Decision Support</h4><p>Verdict/flight-readiness, RUL projection, counterfactual "what-if-fixed" simulator, ranked maintenance recommendations, mission analysis simulator, templated Q&amp;A.</p></div>
+    <div class="card"><h4>Presentation Layer</h4><p>Single self-contained interactive dashboard (charts, 3D engine model, sliders) — no backend server required, fully offline-capable, security-reviewed.</p></div>
+  </div>
+
+  <h2 id="features">3. Full feature list</h2>
+  <div class="tblwrap"><table>
+    <tr><th>Feature</th><th>What it does</th><th>Why it matters / differentiator</th><th>Status</th></tr>
+    <tr><td><strong>Physics gas-path solver</strong></td><td>Recovers compressor/turbine efficiency and combustor pressure retention from raw sensors using real thermodynamic equations</td><td>Makes health estimates interpretable and physically grounded, not a black box</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Flight-Log Match mode</strong></td><td>Exact reconstruction of a known engine's degradation curve</td><td>R²=1.0, RMSE=0.0 on official test split — found the dataset's true generative law</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Fleet Baseline Estimate mode</strong></td><td>Hierarchical trend + monotonic GBR residual + conformal UQ</td><td>Works for a brand-new engine with zero history (Flight-Log Match cannot); stress-tested via leave-one-engine-out</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Verdict panel</strong></td><td>"Can this engine fly today?" YES/NO + confidence</td><td>Leads with the answer, not a wall of graphs — matches how an engineer actually wants information</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>2D gas-path schematic</strong></td><td>Inlet→Compressor→Combustor→Turbine→Exhaust, color-coded by live status</td><td>Instant visual triage without reading numbers</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Per-subsystem reasons</strong></td><td>Plain-language cause for each subsystem's status, from real z-scores and slopes</td><td>Explainability — a jury/engineer can see *why*, not just a percentage</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Remaining Useful Life</strong></td><td>Cycles until the 80% maintenance-review threshold, with progress bar</td><td>Translates health into a maintenance-planning number a manager understands</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Anomaly Watch + fault-injection demo</strong></td><td>Per-subsystem z-score vs normal operating envelope; a button injects a synthetic fault and shows detection firing live</td><td>Proves (not just claims) the physics layer catches faults a cycle-only model structurally cannot see</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Mission Impact</strong></td><td>Fuel-burn / range impact from current degradation</td><td>Ties engine health to operational consequence (PS-1 mission framing) — <span class="pill caveat">documented approximation</span>, see §6</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Mission Analysis simulator</strong></td><td>Altitude/RPM/Duration/Payload sliders, live thrust &amp; fuel prediction</td><td>Real trained-model inference via a precomputed response surface — no backend needed</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Shadow Healthy Twin</strong></td><td>Reference line at each engine's own healthiest recorded reading</td><td>Visualizes the exact degradation gap on every chart</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Counterfactual Simulator + Recommendation ranking</strong></td><td>"If subsystem X were restored, overall health recovers +N points" — ranked</td><td><strong>Exact</strong> (not approximate): we discovered OverallHealth = 0.4·Compressor + 0.3·Combustor + 0.3·Turbine, R²=1.0</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Cross-Subsystem Correlation</strong></td><td>Statistical correlation between subsystems' decline rates across the fleet</td><td>Honestly reframed from a "failure propagation" causal claim the data doesn't support — correlations are weak (0.05, 0.31, −0.06)</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Engine DNA</strong></td><td>Each engine's closed-form calibration vector (h1, d), exposed in the sidebar</td><td>Confirmed leak-free — fit only from that engine's own train-split cycles</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Neural context-encoder ablation</strong></td><td>PCA + MLP alternative to Engine DNA, benchmarked head-to-head</td><td>Neural version scores R²=−0.37 (worse than the mean); closed-form wins — reported as a deliberate "match model complexity to data scale" engineering choice</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Ask the Twin (Q&amp;A)</strong></td><td>Fixed real questions answered from live computed values</td><td>Same feel as an "AI assistant" idea, but zero hallucination risk — fully static, no backend/API needed</td><td><span class="pill done">Built</span></td></tr>
+    <tr><td><strong>Interactive 3D engine model</strong></td><td>Real Three.js WebGL scene: rotate, zoom, click-to-inspect, color-coded, fault pulse, airflow animation, X-ray toggle, time-machine cycle scrubber, live sensor labels</td><td>Verified rendering (real WebGL 2.0 context, zero console errors); architecture accepts a Fusion 360 GLB mesh later without changing interaction logic</td><td><span class="pill new">Built</span></td></tr>
+    <tr><td><strong>Security review</strong></td><td>Full review of the dashboard's attack surface</td><td>No vulnerabilities found — no user-input surface currently; requirements pinned</td><td><span class="pill done">Built</span></td></tr>
+  </table></div>
+
+  <h2 id="metrics">4. Validation metrics (all real, computed on the official train/test split)</h2>
+  <div class="tblwrap"><table>
+    <tr><th>Target</th><th>Flight-Log Match RMSE / R²</th><th>Fleet Baseline RMSE / R²</th><th>90% Conformal Coverage</th></tr>
+    <tr><td>Compressor Health</td><td class="num">0.0 / 1.0</td><td class="num">0.00758 / 0.990</td><td class="num">86.7%</td></tr>
+    <tr><td>Combustor Health</td><td class="num">0.0 / 1.0</td><td class="num">0.00428 / 0.979</td><td class="num">85.0%</td></tr>
+    <tr><td>Turbine Health</td><td class="num">0.0 / 1.0</td><td class="num">0.00702 / 0.979</td><td class="num">83.3%</td></tr>
+    <tr><td>Overall Health</td><td class="num">0.0 / 1.0</td><td class="num">0.00474 / 0.992</td><td class="num">93.3%</td></tr>
+    <tr><td>Thrust (N)</td><td class="num">—</td><td class="num">1598 / 0.990</td><td class="num">—</td></tr>
+    <tr><td>TSFC (g/N·s)</td><td class="num">—</td><td class="num">0.0009 / 0.982</td><td class="num">—</td></tr>
+  </table></div>
+  <p><strong>Leave-one-engine-out stress test</strong> (Fleet Baseline Estimate, held out entirely): mean RMSE <code>0.0113</code> on OverallHealth (scale ~0.75–1.0) — proves graceful generalization to an unseen engine.</p>
+  <p><strong>Anomaly detection (fault-injection test)</strong>: max |z-score| jumps from ~3.2 (normal noise) to <code>20.65</code> after injecting a synthetic compressor fault — clean, dramatic, honestly reported signal (one borderline false positive at z=3.18 also disclosed).</p>
+  <p><strong>Context-encoder ablation</strong>: Neural (PCA+MLP) RMSE <code>0.0602</code>, R² <code>−0.37</code> vs. closed-form RMSE <code>0.0</code>, R² <code>1.0</code>.</p>
+
+  <h2 id="discoveries">5. Key findings from our own EDA (worth highlighting — most teams won't find these)</h2>
+  <ul>
+    <li><strong>Health is deterministic, not noisy:</strong> every engine's health trajectory follows an <em>identical</em> normalized shape curve (cross-engine std ≈ 1e-15) — only two free parameters per engine (initial health, total drop) fully determine its trajectory.</li>
+    <li><strong>Raw sensors are dominated by flight-condition noise, not health:</strong> raw sensor ratios correlate &lt;0.15 with health; <code>Cycle</code> number alone correlates ~0.90–0.97. This is why a naive black-box model would quietly lean on <code>Cycle</code> without understanding why.</li>
+    <li><strong>OverallHealth has an exact closed form:</strong> <code>0.4·Compressor + 0.3·Combustor + 0.3·Turbine</code>, R²=1.0 — not approximated, discovered by regression.</li>
+    <li><strong>Thrust/TSFC are flight-condition-driven, not health-driven:</strong> confirmed via correlation analysis (TSFC correlates 0.80–0.95 with fuel flow/T3/T4, ~0 with health) — this is why our Mission Impact panel uses health as the basis instead of raw TSFC (see §6).</li>
+    <li><strong>Subsystems degrade independently, not causally:</strong> cross-subsystem decline-rate correlation is weak (0.05, 0.31, −0.06) — no evidence one subsystem's wear drives another's.</li>
+  </ul>
+
+  <h2 id="honesty">6. Honest disclosures &amp; limitations (know these before the jury Q&amp;A does)</h2>
+  <div class="callout">
+    <strong>Mission fuel-penalty metric was originally wrong</strong> — a first version showed some engines "improving" fuel efficiency while degrading (physically nonsensical), traced to raw TSFC being flight-condition-noise-dominated. Fixed by switching to a clearly labeled engineering approximation based on the validated health index instead of the noisy raw signal.
+  </div>
+  <div class="callout">
+    <strong>Conformal prediction undershoots its nominal coverage</strong>: 83–93% observed vs. 90% target, a known finite-sample effect of calibrating on ~50 points. Disclosed in the dashboard's Methodology panel rather than hidden.
+  </div>
+  <div class="callout">
+    <strong>Payload/Weather fields in Mission Analysis are illustrative, not model-fitted</strong> — the dataset has no payload or weather columns. Clearly tagged "Illustrative" in the UI rather than presented as learned.
+  </div>
+  <div class="callout good">
+    <strong>Neural context-encoder underperforms closed-form</strong> at this data scale (only 10 engines) — reported as a deliberate engineering decision (matching model complexity to data size), not hidden or spun as a win for the neural approach.
+  </div>
+  <div class="callout good">
+    <strong>3D engine model is procedural geometry, not a Fusion 360 export</strong> — no CAD model exists yet. Framed honestly in the dashboard copy and should be framed the same way in the PPT: the interaction architecture (click, color, physics-binding) is built and works; a nicer mesh is a drop-in swap, not unbuilt functionality.
+  </div>
+
+  <h2 id="mapping">7. PS-2 requirement mapping</h2>
+  <div class="tblwrap"><table>
+    <tr><th>PS-2 Task</th><th>Covered by</th></tr>
+    <tr><td>4.1 Engine Digital Twin Construction</td><td>Full Stage A+B+C pipeline, live dashboard</td></tr>
+    <tr><td>4.2 Subsystem Health Estimation</td><td>Compressor/Combustor/Turbine health, per-subsystem reasons, z-scores</td></tr>
+    <tr><td>4.3 Overall Engine Health Assessment</td><td>Unified OverallHealth index — exact discovered composition formula</td></tr>
+    <tr><td>4.4 Surrogate Modeling</td><td>Closed-form physics inversion (instant) + lightweight GBR, both far faster than full simulation</td></tr>
+    <tr><td>4.5 Performance Prediction</td><td>Thrust &amp; TSFC prediction, Mission Analysis simulator</td></tr>
+    <tr><td>4.6 Uncertainty Quantification</td><td>Split conformal prediction, disclosed coverage limitations</td></tr>
+  </table></div>
+  <p>Evaluation weights from the PS: Health Estimation Accuracy 30%, Surrogate Model Performance 20%, Physics Consistency 15%, Generalization Capability 15%, Computational Efficiency 10%, Dashboard/Interpretability 10%.</p>
+
+  <h2 id="ppt">8. PPT slide mapping (9-slide official template)</h2>
+  <div class="tblwrap"><table>
+    <tr><th>Slide</th><th>Draws from</th></tr>
+    <tr><td>2. Problem Understanding &amp; Motivation</td><td>§1 overview, HAL gas-path research citation (already drafted earlier in this project)</td></tr>
+    <tr><td>3. Literature Review</td><td>Physics-informed vs black-box landscape (already drafted)</td></tr>
+    <tr><td>4. Proposed Methodology</td><td>§2 architecture, Stage A equations</td></tr>
+    <tr><td>5. Data Sources &amp; Preprocessing</td><td>Dataset structure, train/test split analysis, §5 EDA findings</td></tr>
+    <tr><td>6. Model Architecture / Implementation</td><td>§2 architecture, Engine DNA, ablation study</td></tr>
+    <tr><td>7. Expected Outcomes &amp; Evaluation Metrics</td><td>§4 metrics table, LOEO, anomaly detection result</td></tr>
+    <tr><td>8. Team Composition</td><td>Needs team input</td></tr>
+    <tr><td>9. Appendix &amp; References</td><td>Cited papers + industrial products research (pending synthesis)</td></tr>
+  </table></div>
+
+  <h2 id="open">9. Open items before final submission</h2>
+  <ul>
+    <li>Industrial-products research (GE, Rolls-Royce, P&amp;W, Honeywell) — background research was launched but not yet synthesized into the literature slide.</li>
+    <li>No PPT slides have been drafted yet — everything above is source material, not the deck itself.</li>
+    <li>Team hasn't reviewed the live dashboard together yet — do that before finalizing slide content, since seeing it live changes what's worth highlighting.</li>
+    <li>Team defense readiness: whoever presents needs to be able to explain Stage A/B/C in plain language without reading from a script.</li>
+  </ul>
+
+  <p style="margin-top:40px; color:var(--text-muted); font-size:12px;">AeroTwin · Aerothon 2026 (HAL × IIT Indore) · Prepared as a team working document.</p>
+</div>
