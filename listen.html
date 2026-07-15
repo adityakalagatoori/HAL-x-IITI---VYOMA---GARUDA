@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Team Vyoma — Slide Explanation</title>
+<title>Team Vyoma — Slide Explanations</title>
 <style>
   :root {
     --blue-deep: #0d3d78;
@@ -28,30 +28,48 @@
   }
 
   .slide-frame {
-    max-width: 100%; max-height: calc(100% - 110px);
+    max-width: 100%; max-height: calc(100% - 118px);
     border-radius: 14px; overflow: hidden;
     box-shadow: 0 20px 60px rgba(4, 12, 28, 0.55), 0 2px 8px rgba(4,12,28,0.4);
     border: 1px solid rgba(255,255,255,0.25);
+    transition: opacity .18s ease;
   }
   .slide-frame img { display: block; width: 100%; height: 100%; object-fit: contain; background: #fff; }
 
+  /* ---------- side nav arrows ---------- */
+  .nav-arrow {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    box-shadow: 0 6px 20px var(--glass-shadow);
+    transition: background .15s ease, transform .1s ease, opacity .15s ease;
+  }
+  .nav-arrow:hover { background: rgba(255,255,255,0.26); }
+  .nav-arrow:active { transform: translateY(-50%) scale(0.92); }
+  .nav-arrow.disabled { opacity: 0.25; pointer-events: none; }
+  .nav-arrow svg { width: 20px; height: 20px; fill: #fff; }
+  #prevArrow { left: 16px; }
+  #nextArrow { right: 16px; }
+
   /* ---------- Glassmorphism control bar ---------- */
   .player {
-    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
-    display: flex; align-items: center; gap: 14px;
-    padding: 12px 18px;
+    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px;
     background: var(--glass-bg);
     -webkit-backdrop-filter: blur(18px) saturate(160%);
     backdrop-filter: blur(18px) saturate(160%);
     border: 1px solid var(--glass-border);
     border-radius: 999px;
     box-shadow: 0 8px 32px var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.4);
-    max-width: 92vw;
+    max-width: 94vw;
   }
 
   .ctrl-btn {
     display: flex; align-items: center; justify-content: center;
-    width: 44px; height: 44px; border-radius: 50%;
+    width: 42px; height: 42px; border-radius: 50%;
     background: rgba(255,255,255,0.22);
     border: 1px solid rgba(255,255,255,0.4);
     cursor: pointer; flex-shrink: 0;
@@ -59,30 +77,32 @@
   }
   .ctrl-btn:hover { background: rgba(255,255,255,0.32); }
   .ctrl-btn:active { transform: scale(0.94); }
-  .ctrl-btn svg { width: 20px; height: 20px; fill: #ffffff; }
+  .ctrl-btn svg { width: 18px; height: 18px; fill: #ffffff; }
 
-  .track {
-    display: flex; flex-direction: column; gap: 5px; min-width: 140px;
-  }
-  .label {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.03em; color: #ffffff;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  }
-  .progress-wrap {
-    width: 100%; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.25);
-    overflow: hidden; cursor: pointer;
-  }
+  .track { display: flex; flex-direction: column; gap: 5px; min-width: 120px; }
+  .label { font-size: 11px; font-weight: 600; letter-spacing: 0.02em; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  .progress-wrap { width: 100%; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.25); overflow: hidden; cursor: pointer; }
   .progress-fill { height: 100%; width: 0%; background: #ffffff; border-radius: 3px; }
 
-  .speed-btn {
+  .speed-btn, .auto-btn {
     display: flex; align-items: center; justify-content: center;
-    min-width: 46px; height: 44px; padding: 0 10px; border-radius: 999px;
+    min-width: 42px; height: 42px; padding: 0 10px; border-radius: 999px;
     background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.4);
-    color: #ffffff; font-size: 12.5px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+    color: #ffffff; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0;
     transition: background .15s ease, transform .1s ease;
   }
-  .speed-btn:hover { background: rgba(255,255,255,0.32); }
-  .speed-btn:active { transform: scale(0.94); }
+  .speed-btn:hover, .auto-btn:hover { background: rgba(255,255,255,0.32); }
+  .speed-btn:active, .auto-btn:active { transform: scale(0.94); }
+  .auto-btn.on { background: rgba(255,255,255,0.5); color: var(--blue-deep); }
+
+  .counter {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+    padding: 7px 16px; border-radius: 999px;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    color: #fff; font-size: 12px; font-weight: 700; letter-spacing: 0.03em;
+    box-shadow: 0 6px 20px var(--glass-shadow);
+  }
 
   .tap-overlay {
     position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
@@ -90,20 +110,22 @@
     color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center; z-index: 10;
   }
   .tap-overlay.show { display: flex; }
-  .tap-inner {
-    background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px;
-    padding: 26px 32px; backdrop-filter: blur(18px);
-  }
+  .tap-inner { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 26px 32px; backdrop-filter: blur(18px); }
   .tap-inner svg { width: 34px; height: 34px; fill: #fff; margin-bottom: 8px; }
 </style>
 </head>
 <body>
+
+  <div class="counter" id="counter">Slide 1 / 9</div>
 
   <div class="stage">
     <div class="slide-frame">
       <img id="slideImg" alt="Slide">
     </div>
   </div>
+
+  <div class="nav-arrow" id="prevArrow"><svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg></div>
+  <div class="nav-arrow" id="nextArrow"><svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4L13.2 12z"/></svg></div>
 
   <div class="player">
     <div class="ctrl-btn" id="playBtn">
@@ -114,6 +136,7 @@
       <div class="label" id="slideLabel">Team Vyoma</div>
       <div class="progress-wrap" id="progressWrap"><div class="progress-fill" id="progressFill"></div></div>
     </div>
+    <div class="auto-btn on" id="autoBtn" title="Auto-advance to next slide">AUTO</div>
     <div class="speed-btn" id="speedBtn">1x</div>
   </div>
 
@@ -138,34 +161,55 @@
     8: { audio: "media/team_vyoma_slide8_explanation.ogg", img: "media/slide_images/slide8.png" },
     9: { audio: "media/team_vyoma_slide9_explanation.ogg", img: "media/slide_images/slide9.png" },
   };
+  const TOTAL = 9;
 
   const params = new URLSearchParams(window.location.search);
-  const slideNum = parseInt(params.get("slide") || "1", 10);
-  const cfg = SLIDES[slideNum] || SLIDES[1];
+  let current = parseInt(params.get("slide") || "1", 10);
+  if (current < 1 || current > TOTAL) current = 1;
 
-  document.getElementById("slideImg").src = cfg.img;
-  document.getElementById("slideLabel").textContent = "Team Vyoma — Slide " + slideNum;
-
+  const slideImg = document.getElementById("slideImg");
+  const slideLabel = document.getElementById("slideLabel");
+  const counter = document.getElementById("counter");
   const audio = document.getElementById("audio");
-  audio.src = cfg.audio;
-
   const playBtn = document.getElementById("playBtn");
   const playIcon = document.getElementById("playIcon");
   const pauseIcon = document.getElementById("pauseIcon");
   const speedBtn = document.getElementById("speedBtn");
+  const autoBtn = document.getElementById("autoBtn");
   const progressFill = document.getElementById("progressFill");
   const progressWrap = document.getElementById("progressWrap");
   const tapOverlay = document.getElementById("tapOverlay");
+  const prevArrow = document.getElementById("prevArrow");
+  const nextArrow = document.getElementById("nextArrow");
 
   const SPEEDS = [1, 1.25, 1.5, 2];
   let speedIdx = 0;
+  let autoAdvance = true;
 
   function setPlayingUI(playing) {
     playIcon.style.display = playing ? "none" : "block";
     pauseIcon.style.display = playing ? "block" : "none";
   }
 
-  function tryAutoplay() {
+  function loadSlide(n, autoplay) {
+    current = n;
+    const cfg = SLIDES[n];
+    slideImg.style.opacity = 0;
+    setTimeout(() => { slideImg.src = cfg.img; slideImg.style.opacity = 1; }, 120);
+    slideLabel.textContent = "Team Vyoma — Slide " + n;
+    counter.textContent = "Slide " + n + " / " + TOTAL;
+    prevArrow.classList.toggle("disabled", n === 1);
+    nextArrow.classList.toggle("disabled", n === TOTAL);
+
+    audio.src = cfg.audio;
+    audio.playbackRate = SPEEDS[speedIdx];
+    progressFill.style.width = "0%";
+    history.replaceState(null, "", "?slide=" + n);
+
+    if (autoplay) tryPlay();
+  }
+
+  function tryPlay() {
     const p = audio.play();
     if (p !== undefined) {
       p.then(() => setPlayingUI(true)).catch(() => {
@@ -175,7 +219,7 @@
     }
   }
 
-  window.addEventListener("load", tryAutoplay);
+  window.addEventListener("load", () => loadSlide(current, true));
 
   playBtn.addEventListener("click", () => {
     if (audio.paused) { audio.play(); setPlayingUI(true); }
@@ -192,15 +236,42 @@
     speedBtn.textContent = SPEEDS[speedIdx] + "x";
   });
 
+  autoBtn.addEventListener("click", () => {
+    autoAdvance = !autoAdvance;
+    autoBtn.classList.toggle("on", autoAdvance);
+  });
+
+  prevArrow.addEventListener("click", () => { if (current > 1) loadSlide(current - 1, true); });
+  nextArrow.addEventListener("click", () => { if (current < TOTAL) loadSlide(current + 1, true); });
+
   audio.addEventListener("timeupdate", () => {
     if (audio.duration) progressFill.style.width = (audio.currentTime / audio.duration * 100) + "%";
   });
-  audio.addEventListener("ended", () => setPlayingUI(false));
+
+  audio.addEventListener("ended", () => {
+    setPlayingUI(false);
+    if (autoAdvance && current < TOTAL) {
+      setTimeout(() => loadSlide(current + 1, true), 900);
+    }
+  });
 
   progressWrap.addEventListener("click", (e) => {
     const rect = progressWrap.getBoundingClientRect();
     const frac = (e.clientX - rect.left) / rect.width;
     if (audio.duration) audio.currentTime = frac * audio.duration;
+  });
+
+  // swipe left/right on the slide image for touch navigation
+  let touchStartX = null;
+  document.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener("touchend", (e) => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) {
+      if (dx < 0 && current < TOTAL) loadSlide(current + 1, true);
+      if (dx > 0 && current > 1) loadSlide(current - 1, true);
+    }
+    touchStartX = null;
   });
 </script>
 </body>
