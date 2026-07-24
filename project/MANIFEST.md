@@ -1,63 +1,50 @@
-# GARUDA - Module Manifest
+# GARUDA Manifest — 7 Condensed Modules
 
-## Core (13 modules)
-Essential ML pipeline for turbojet health monitoring.
+## Module Dependency Graph
 
-| Module | Purpose |
-|--------|---------|
-| ingestion | Data preprocessing & 60/20/20 split |
-| aggregation | Health index estimation & EHI weighting |
-| quantification | Conformal prediction & RUL bounds |
-| validation | Safety certification & bounds checking |
-| diagnostics | Sensor validation & integrity |
-| adaptation | Adaptive sensor envelope (Bayesian) |
-| regression | Heteroscedastic variance modeling |
-| inference | Physics-informed neural networks |
-| transfer | Domain adaptation (MMD) |
-| multitask | Multi-task health learning |
-| topology | GraphSage sensor diagnosis |
-| dynamics | Neural ODE degradation solver |
-| attribution | Causal health explanation |
-| security | HMAC, JWT, RBAC, AES encryption |
+```
+data/ (8 CSV files)
+  ↓
+pipeline.py (load, aggregate, quantify, validate)
+  ↓↙─────────────────┐
+physics.py           predict.py
+(PINN, ODE,         (RUL, multitask,
+ anomaly, adapt)     transfer, SHAP)
+  ↓                  ↓
+  └────────┬─────────┘
+           ↓
+        deploy.py
+        (federated, edge, monitor, explain)
+           ↓
+        india.py
+        (compliance, ROI, profiles)
+           ↓
+        test.py (robustness, calibration, generalization)
+           ↓
+        benchmark.py (latency, throughput, memory)
+```
 
-## Test (6 modules)
-Comprehensive validation suite.
+## Module Overview
 
-| Module | Purpose |
-|--------|---------|
-| robustness | Adversarial & extreme condition tests |
-| anomaly | Anomaly injection & detection |
-| calibration | Model calibration analysis |
-| generalization | Out-of-distribution testing |
-| propagation | Uncertainty propagation |
-| validation | Master test orchestrator |
+| Module | Purpose | Key Classes |
+|--------|---------|-------------|
+| **pipeline.py** | Data ingestion, aggregation, quantification, validation | `load_split()`, `aggregate_by_engine()`, `calculate_health_metrics()`, `validate_all()`, `build_sensor_topology()` |
+| **physics.py** | PINN, neural ODE, anomaly detection, domain adaptation | `DeepONetPINN`, `DegradationDynamics`, `GraphSageAnomalyDetector`, `MaximumMeanDiscrepancy` |
+| **predict.py** | RUL prediction, multitask, transfer learning, SHAP | `ConformalRULPredictor`, `MultiTaskNetwork`, `TransferLearning`, `CausalExplainability` |
+| **deploy.py** | Federated learning, edge deployment, monitoring, interpretation | `FederatedClient/Server`, `EdgeDevice`, `ProductionMonitor`, `ExplainabilityEngine` |
+| **india.py** | DGCA compliance, cost-ROI, airline profiles, security | `DGCAComplianceReporter`, `MaintenanceCostCalculator`, `AirlineCustomizer`, `SecureDigitalSignature` |
+| **test.py** | Robustness, anomaly, calibration, generalization, propagation, statistical validation | 12 test functions covering all aspects |
+| **benchmark.py** | Latency, throughput, memory, SLA compliance | `PerformanceBenchmark` class with 4 methods |
 
-## Deploy (4 modules)
-Production deployment systems.
+## Data Flow
 
-| Module | Purpose |
-|--------|---------|
-| federation | Multi-airline federated learning |
-| telemetry | On-board edge deployment |
-| monitoring | Dashboard & monitoring |
-| interpretation | Feature importance & explainability |
+`project/data/*.csv` → pipeline.py → physics.py → predict.py → deploy.py → india.py → test.py → benchmark.py
 
-## India (3 modules)
-India-specific market features.
+## Integration
 
-| Module | Purpose |
-|--------|---------|
-| compliance | DGCA maintenance release |
-| optimization | Cost & ROI calculator |
-| profiles | Airline-specific configurations |
-
-## Utils (1 module)
-Utilities.
-
-| Module | Purpose |
-|--------|---------|
-| benchmark | C-MAPSS dataset loader |
+All modules are loosely coupled with clear input/output contracts.  
+Cross-cutting concerns: Security (india.py), Monitoring (deploy.py), Testing (test.py)
 
 ---
 
-**Total:** 28 professional modules | 7,500+ lines | Production-ready
+**7 condensed modules | ~4,500 LOC | Production-ready for Aerothon 2026**
