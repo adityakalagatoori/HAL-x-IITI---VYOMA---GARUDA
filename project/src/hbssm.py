@@ -12,7 +12,6 @@ Expected improvement: +1.4% accuracy (91.8% → 93.2%)
 """
 import numpy as np
 from scipy.linalg import block_diag
-from filterpy.kalman import KalmanFilter
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -260,5 +259,8 @@ class HierarchicalBayesianSSM:
     def get_uncertainty(self, smoothed_covs):
         """Extract uncertainty from smoothed covariances"""
         # Uncertainty in health (Level 2)
-        health_uncertainty = np.sqrt(np.diag(smoothed_covs)[:, 3:7].mean(axis=1))
-        return health_uncertainty
+        if smoothed_covs.ndim == 3:
+            health_uncertainty = np.sqrt(np.diagonal(smoothed_covs, axis1=1, axis2=2)[:, 3:7].mean(axis=1))
+        else:
+            health_uncertainty = np.sqrt(np.diag(smoothed_covs)[3:7].mean())
+        return health_uncertainty if isinstance(health_uncertainty, np.ndarray) else np.array([health_uncertainty] * len(smoothed_covs))

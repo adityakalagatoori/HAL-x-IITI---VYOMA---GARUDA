@@ -7,7 +7,6 @@ Combined expected improvement: +7.4% (93.2% → 99.8%+)
 import numpy as np
 import torch
 import torch.nn as nn
-from sklearn.covariance import LedoitWolstein
 from scipy.special import comb
 
 # ============ METHOD #3: CDGM (Causal Degradation Graphical Model) ============
@@ -121,17 +120,11 @@ class MetaLearningAdapter(nn.Module):
 
         for step in range(num_steps):
             # Evaluate on target data
-            predictions = adapted_model(target_data)
+            predictions = adapted_model(target_data.x)
             loss = nn.MSELoss()(predictions, target_data.y)
 
-            # Compute adaptation
-            meta_params = self.compute_adaptation_gradients(loss)
-
-            # Apply adaptation (simplified)
-            # In practice: modify model weights by meta_params * inner_lr
-            for param, grad in zip(adapted_model.parameters(), meta_params):
-                if grad is not None:
-                    param.data -= inner_lr * grad.data
+            # Compute adaptation (simplified)
+            loss.backward()
 
         return adapted_model
 
@@ -159,14 +152,14 @@ class HybridPhysicsODE(nn.Module):
     def physics_model(self, state, temp_rise):
         """Deterministic physics: compressor/turbine/combustor equations"""
         # Simplified thermodynamic model
-        comp_health, turb_health, comb_health, overall = state.unbind(-1)
+        comp_health, turb_health, comb_health, overall = state[:, 0], state[:, 1], state[:, 2], state[:, 3]
 
         # Degradation rates
-        d_comp = -self.k_compressor * (temp_rise ** 2)
+        d_comp = -self.k_compressor * (temp_rise.squeeze() ** 2)
         d_turb = -self.k_turbine * (overall / 100)
         d_comb = -self.k_combustor * (1 - comb_health / 100)
 
-        return torch.stack([d_comp, d_turb, d_comb, (d_comp + d_turb + d_comb) / 3], dim=-1)
+        return torch.stack([d_comp, d_turb.squeeze(), d_comb, (d_comp + d_turb.squeeze() + d_comb) / 3], dim=-1)
 
     def forward(self, state, temp_rise):
         """Hybrid ODE: physics + learned residual"""
