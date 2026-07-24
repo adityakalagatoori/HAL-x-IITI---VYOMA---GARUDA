@@ -1,0 +1,152 @@
+<title>GARUDA — Results &amp; Documentation</title>
+<style>
+  :root {
+    --page: #f4f5f2; --surface: #ffffff; --surface-2: #eceee9;
+    --text-primary: #10151a; --text-secondary: #4d5761; --text-muted: #818b93;
+    --border: rgba(16,20,24,0.12); --accent: #0d9488; --accent-soft: rgba(13,148,136,0.10);
+    --accent-2: #d9622b; --good: #0ca30c; --warning: #c98400; --serious: #c65a2e; --critical: #d03b3b;
+    --good-soft: rgba(12,163,12,0.10); --warning-soft: rgba(201,132,0,0.10);
+    --serious-soft: rgba(198,90,46,0.10); --critical-soft: rgba(208,59,59,0.10);
+    --mono: ui-monospace, "SF Mono", Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#0c1013; --surface:#141a1f; --surface-2:#1a2128; --text-primary:#eef1f3; --text-secondary:#a7b0b8; --text-muted:#6b7684; --border:rgba(255,255,255,0.10); --accent:#2ba89c; --accent-soft:rgba(43,168,156,0.14); }
+  }
+  :root[data-theme="dark"] { --page:#0c1013; --surface:#141a1f; --surface-2:#1a2128; --text-primary:#eef1f3; --text-secondary:#a7b0b8; --text-muted:#6b7684; --border:rgba(255,255,255,0.10); --accent:#2ba89c; --accent-soft:rgba(43,168,156,0.14); }
+  :root[data-theme="light"] { --page:#f4f5f2; --surface:#ffffff; --surface-2:#eceee9; --text-primary:#10151a; --text-secondary:#4d5761; --text-muted:#818b93; --border:rgba(16,20,24,0.12); --accent:#0d9488; --accent-soft:rgba(13,148,136,0.10); }
+
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--page); color:var(--text-primary); font-family:var(--sans); line-height:1.6; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 90px; }
+
+  .hero { margin-bottom: 44px; }
+  .hero .eyebrow { font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); display: inline-block; padding: 5px 12px; border-radius: 999px; margin-bottom: 14px; }
+  h1 { font-family: var(--mono); font-size: 30px; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--text-secondary); font-size: 15.5px; max-width: 62ch; }
+  .meta { color: var(--text-muted); font-size: 12.5px; font-family: var(--mono); margin-top: 14px; }
+
+  h2 { font-family: var(--mono); font-size: 17px; font-weight: 700; margin: 52px 0 8px; padding-bottom: 9px; border-bottom: 2px solid var(--accent); color: var(--text-primary); }
+  h3 { font-family: var(--mono); font-size: 13px; font-weight: 700; margin: 26px 0 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.03em; }
+  p { color: var(--text-secondary); font-size: 14.5px; max-width: 76ch; }
+  a { color: var(--accent); }
+  code { font-family: var(--mono); font-size: 0.92em; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 8px; font-size: 13.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 600; }
+  td { color: var(--text-secondary); }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--text-primary); font-weight: 600; }
+  .tblwrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 4px 16px; }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin: 14px 0; }
+  @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; }
+  .card h4 { font-family: var(--mono); font-size: 13px; margin: 0 0 7px; color: var(--text-primary); }
+  .card p { font-size: 13px; margin: 0; }
+
+  ul { color: var(--text-secondary); font-size: 14.5px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: var(--text-primary); margin: 14px 0; }
+  .linkbtn { display:inline-block; font-family:var(--mono); font-size:13px; font-weight:700; background:var(--accent); color:white; padding:10px 18px; border-radius:8px; text-decoration:none; margin-top:8px; margin-right:10px; }
+  .linkbtn.secondary { background: var(--surface-2); color: var(--text-primary); border: 1px solid var(--border); }
+
+  .toc { columns: 2; font-size: 13.5px; margin: 18px 0 0; }
+  @media (max-width: 600px) { .toc { columns: 1; } }
+  .toc a { display:block; padding: 4px 0; color: var(--text-secondary); text-decoration:none; }
+  .toc a:hover { color: var(--accent); }
+
+  .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 12px; font-family: var(--mono); }
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="eyebrow">Aerothon 2026 · HAL × IIT Indore · Team Vyoma</span>
+    <h1>GARUDA</h1>
+    <div class="subtitle">Physics-Informed Digital Twin for Real-Time Four-Stage Turbojet Health Monitoring — results, methodology, and validation, documented in full.</div>
+    <div class="meta">PS-2 Submission Documentation</div>
+    <div>
+      <a href="https://adityakalagatoori.github.io/HAL-x-IITI---VYOMA---GARUDA/dashboard.html" class="linkbtn">→ Open the Interactive Dashboard</a>
+    </div>
+  </div>
+
+  <div class="toc">
+    <a href="#overview">Overview</a>
+    <a href="#architecture">System Architecture</a>
+    <a href="#methodology">Methodology</a>
+    <a href="#results">Validation Results</a>
+    <a href="#differentiators">Key Differentiators</a>
+    <a href="#limitations">Known Limitations</a>
+    <a href="#references">References</a>
+  </div>
+
+  <h2 id="overview">Overview</h2>
+  <p>GARUDA is a hybrid physics + machine-learning digital twin that estimates the health of a four-stage turbojet's compressor, combustor, and turbine directly from gas-path sensor readings, predicts engine performance (thrust and fuel consumption), detects real and sensor-originated faults, and provides maintenance recommendations — all through an interactive dashboard including a live 3D engine model.</p>
+  <p>Rather than treating this as a pure prediction problem, GARUDA is built around a discovered fact about the provided dataset: raw sensor readings alone explain under 16% of true component health, dominated by flight-condition noise. A physics layer is therefore not an optional add-on here — it is the mechanism that makes health estimation possible at all.</p>
+
+  <h2 id="architecture">System Architecture</h2>
+  <div class="grid2">
+    <div class="card"><h4>Physics Layer</h4><p>0-D Brayton-cycle gas-path inversion — recovers compressor and turbine isentropic efficiency and combustor pressure retention directly from sensor readings. No training required.</p></div>
+    <div class="card"><h4>Sensor Integrity Layer</h4><p>Hard physical rules (verified 100% true on real data) plus a calibrated plausibility envelope, distinguishing a lying sensor from a genuinely degrading component before either reaches the health estimate.</p></div>
+    <div class="card"><h4>Health Estimation — Two Modes</h4><p><strong>Flight-Log Match</strong>: closed-form exact reconstruction for a known engine. <strong>Fleet Baseline Estimate</strong>: hierarchical trend + monotonicity-constrained gradient boosting + conformal uncertainty, for a brand-new engine with no history.</p></div>
+    <div class="card"><h4>Decision Layer</h4><p>Remaining useful life projection, counterfactual "what-if-restored" simulation, ranked maintenance recommendations, and a mission-impact estimate.</p></div>
+  </div>
+
+  <h2 id="methodology">Methodology</h2>
+  <h3>Physics Equations</h3>
+  <p>Compressor isentropic efficiency: <code>η_c = (T2s − T01) / (T2 − T01)</code>, and turbine isentropic efficiency: <code>η_t = (T3 − T4) / (T3 − T4s)</code>, computed from ram-corrected stagnation conditions at the inlet. Combustor performance is characterized via pressure retention (<code>P3/P2</code>).</p>
+  <h3>Model Selection</h3>
+  <p>Each model choice was tested, not assumed. For exact reconstruction, a closed-form alternating least squares solution was compared directly against a neural alternative (a PCA context encoder feeding a diagnostic head): the neural approach scored R²=−0.37 (worse than predicting the mean); the closed-form approach scored R²=1.0. With only 10 engines in the provided dataset, there is not enough data for a network to learn a useful prior — the simpler architecture was chosen because the data justified it, not by default.</p>
+  <h3>Uncertainty Quantification</h3>
+  <p>Split conformal prediction is used for the Fleet Baseline Estimate mode, providing a distribution-free coverage guarantee rather than a bootstrap approximation.</p>
+
+  <h2 id="results">Validation Results</h2>
+  <div class="tblwrap"><table>
+    <tr><th>Metric</th><th>Result</th><th>Basis</th></tr>
+    <tr><td>Health Estimation Accuracy</td><td class="num">R² = 1.0</td><td>Known engine, exact closed-form reconstruction (official test split)</td></tr>
+    <tr><td>Health Estimation Accuracy</td><td class="num">R² = 0.99</td><td>Held-out cycles, generalizable model (official test split)</td></tr>
+    <tr><td>Generalization Capability</td><td class="num">0.0113 RMSE</td><td>Leave-one-engine-out — engine never seen during training</td></tr>
+    <tr><td>Surrogate Model — Thrust</td><td class="num">R² = 0.99</td><td>Predicted directly from sensors</td></tr>
+    <tr><td>Surrogate Model — TSFC</td><td class="num">R² = 0.98</td><td>Predicted directly from sensors</td></tr>
+    <tr><td>Physics Consistency</td><td class="num">R² = 1.0</td><td>Exact discovered composition law governing overall health</td></tr>
+    <tr><td>Fault-Injection Detection</td><td class="num">z ≈ 3 → z = 20.65</td><td>Simulated compressor fault vs. normal operating noise</td></tr>
+    <tr><td>Sensor Integrity Check</td><td class="num">0 false alarms / 300 cycles</td><td>Tested against every real recorded cycle in the dataset</td></tr>
+  </table></div>
+  <p style="margin-top:10px;">All results are computed on the official provided dataset (train/test split as released) and are independently reproducible from the underlying methodology described above.</p>
+
+  <h2 id="differentiators">Key Differentiators</h2>
+  <ul>
+    <li><strong>Physics-informed, not black-box.</strong> Every health estimate is grounded in thermodynamic equations, not purely learned correlations.</li>
+    <li><strong>Sensor Integrity Check.</strong> Distinguishes a malfunctioning sensor from a genuinely degrading component — a capability absent from standard health-monitoring approaches in the reviewed literature.</li>
+    <li><strong>Tested, not assumed, architecture.</strong> The neural-vs-closed-form ablation study is a direct, quantified comparison, not a design assumption.</li>
+    <li><strong>Exact discovered structure.</strong> The dataset's underlying degradation law (a single normalized curve shared across all engines) and its overall-health composition formula were independently discovered through analysis, not provided or assumed.</li>
+    <li><strong>Dual-mode design.</strong> Exact reconstruction where possible, generalizable estimation where necessary — covering both a known engine and a completely new one.</li>
+  </ul>
+
+  <h2 id="limitations">Known Limitations</h2>
+  <div class="callout">
+    <strong>Conformal prediction coverage.</strong> In back-testing, observed coverage on the Fleet Baseline Estimate ranged 83–93% against a 90% nominal target — a known finite-sample effect of calibrating on a small dataset, disclosed rather than hidden.
+  </div>
+  <div class="callout">
+    <strong>Flight-Log Match requires history.</strong> The exact-reconstruction mode needs at least two recorded cycles of an engine's own history; it has no defined answer for a completely new engine with zero prior data — which is exactly the case the Fleet Baseline Estimate mode is designed to cover instead.
+  </div>
+  <div class="callout">
+    <strong>Mission-impact estimate.</strong> Raw fuel-consumption readings in the provided dataset are dominated by instantaneous flight condition rather than health, so the mission fuel-impact figure is derived from the validated health index via a documented engineering approximation rather than a directly fitted model.
+  </div>
+
+  <h2 id="references">References</h2>
+  <ol style="color:var(--text-secondary); font-size: 13.5px; padding-left: 20px;">
+    <li>Rath, N.; Mishra, R.K.; Kushari, A. "Aero engine health monitoring, diagnostics and prognostics for condition-based maintenance: An overview." <em>Int'l J. Turbo &amp; Jet-Engines</em>, 2024, 40(s1), 279–292.</li>
+    <li>Kalman Filter Constraint Switching for Turbofan Engine Health Estimation, ScienceDirect.</li>
+    <li>Gas Path Health Monitoring for a Turbofan Engine Based on a Nonlinear Filtering Approach, MDPI Energies.</li>
+    <li>Physics-Informed Hybrid Transformer with Uncertainty Quantification for RUL of Turbofan Engines, 2025.</li>
+    <li>Physics-Informed Neural Networks for Industrial Gas Turbines: Recent Trends, Advancements and Challenges, 2025.</li>
+  </ol>
+
+  <div>
+    <a href="https://adityakalagatoori.github.io/HAL-x-IITI---VYOMA---GARUDA/dashboard.html" class="linkbtn">→ Open the Interactive Dashboard</a>
+  </div>
+
+  <div class="footer">GARUDA · Team Vyoma · Aerothon 2026 (HAL × IIT Indore) · PS-2</div>
+</div>
