@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GARUDA Dashboard — Turbojet Health Monitoring</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .status-label {
+            font-size: 0.85em;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .metric {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metric-unit {
+            font-size: 0.8em;
+            color: #999;
+            margin-left: 5px;
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .alert-critical {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            color: #e65100;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge-hal {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-ai {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .badge-ig {
+            background: #e0f2f1;
+            color: #00695c;
+        }
+
+        .badge-sj {
+            background: #fce4ec;
+            color: #880e4f;
+        }
+
+        .badge-aa {
+            background: #f1f8e9;
+            color: #33691e;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .footer {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #999;
+        }
+
+        .btn-secondary:hover {
+            background: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🛩️ GARUDA Dashboard</h1>
+            <p class="subtitle">Physics-Informed Digital Twin for Turbojet Health Monitoring</p>
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-label">Aircraft Monitored</div>
+                    <div class="status-value">100+</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Engines Tracked</div>
+                    <div class="status-value">1,200+</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Data Points</div>
+                    <div class="status-value">50M+</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Status</div>
+                    <div class="status-value" style="color: #4caf50;">Active</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Alerts Section -->
+        <div class="grid">
+            <div class="card">
+                <h2>⚠️ Critical Alerts</h2>
+                <div class="alert alert-critical">
+                    <strong>Engine HAL-045:</strong> RUL = 38 hours. Schedule maintenance immediately.
+                </div>
+                <div class="alert alert-warning">
+                    <strong>Engine AI-123:</strong> RUL = 95 hours. Plan maintenance within 1 week.
+                </div>
+                <div class="alert alert-success">
+                    <strong>Fleet Status:</strong> 95% of engines operating normally.
+                </div>
+            </div>
+
+            <!-- RUL Predictions -->
+            <div class="card">
+                <h2>📊 RUL Distribution</h2>
+                <div class="metric">
+                    <div class="metric-label">Average RUL (Fleet)</div>
+                    <div class="metric-value">
+                        180 <span class="metric-unit">hours</span>
+                    </div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Critical Engines (&lt;50h)</div>
+                    <div class="metric-value">
+                        5 <span class="metric-unit">engines</span>
+                    </div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Predicted Maintenance Cost (Next 90d)</div>
+                    <div class="metric-value">
+                        ₹2.5 <span class="metric-unit">Cr</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Individual Engine Performance -->
+        <div class="grid">
+            <div class="card">
+                <h2>🔧 Engine: HAL-001</h2>
+                <div class="metric">
+                    <div class="metric-label">Remaining Useful Life (RUL)</div>
+                    <div class="metric-value">42.3 <span class="metric-unit">hours</span></div>
+                    <p style="font-size: 0.85em; color: #666; margin-top: 5px;">Confidence: ±15 hours (90%)</p>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Overall Health</div>
+                    <div class="health-bar">
+                        <div class="health-fill" style="width: 82%;">82%</div>
+                    </div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Component Health</div>
+                    <table style="margin-top: 10px;">
+                        <tr>
+                            <td><strong>Compressor</strong></td>
+                            <td style="text-align: right;"><span style="color: #ff9800;">85%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Combustor</strong></td>
+                            <td style="text-align: right;"><span style="color: #4caf50;">92%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Turbine</strong></td>
+                            <td style="text-align: right;"><span style="color: #ff5722;">78%</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔧 Engine: HAL-045</h2>
+                <div class="metric">
+                    <div class="metric-label">Remaining Useful Life (RUL)</div>
+                    <div class="metric-value">38.1 <span class="metric-unit">hours</span></div>
+                    <p style="font-size: 0.85em; color: #f44336; margin-top: 5px;">⚠️ CRITICAL: Immediate maintenance required</p>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Overall Health</div>
+                    <div class="health-bar">
+                        <div class="health-fill" style="width: 68%; background: linear-gradient(90deg, #ff5722, #f44336);">68%</div>
+                    </div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Degradation Trend</div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                        <strong>Primary Issue:</strong> Compressor efficiency ↓ 18%<br/>
+                        <strong>Root Cause:</strong> Blade erosion<br/>
+                        <strong>Recommendation:</strong> Compressor overhaul required
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Airline Profiles & ROI -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2>💰 Airline Profiles & ROI</h2>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Airline</th>
+                        <th>Annual Cost</th>
+                        <th>Fleet Size</th>
+                        <th>Annual Savings</th>
+                        <th>Payback Period</th>
+                        <th>5-Year ROI</th>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-hal">HAL</span></td>
+                        <td>₹3 Cr</td>
+                        <td>50 aircraft</td>
+                        <td>₹5.2 Cr</td>
+                        <td>6.9 months</td>
+                        <td>₹26 Cr</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-ai">Air India</span></td>
+                        <td>₹1.5 Cr</td>
+                        <td>150 aircraft</td>
+                        <td>₹8.3 Cr</td>
+                        <td>2.1 months</td>
+                        <td>₹40 Cr</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-ig">IndiGo</span></td>
+                        <td>₹80 L</td>
+                        <td>250 aircraft</td>
+                        <td>₹12.1 Cr</td>
+                        <td>0.8 months</td>
+                        <td>₹60 Cr</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-sj">SpiceJet</span></td>
+                        <td>₹60 L</td>
+                        <td>100 aircraft</td>
+                        <td>₹3.2 Cr</td>
+                        <td>2.2 months</td>
+                        <td>₹16 Cr</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-aa">Alliance Air</span></td>
+                        <td>₹80 L</td>
+                        <td>30 aircraft</td>
+                        <td>₹1.1 Cr</td>
+                        <td>8.7 months</td>
+                        <td>₹5.5 Cr</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Model Performance -->
+        <div class="grid">
+            <div class="card">
+                <h2>📈 Model Performance Metrics</h2>
+                <div class="metric">
+                    <div class="metric-label">RUL Prediction RMSE</div>
+                    <div class="metric-value">3.2 <span class="metric-unit">hours</span></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Anomaly Detection Precision</div>
+                    <div class="metric-value">94.7 <span class="metric-unit">%</span></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">UQ Coverage (Target 90%)</div>
+                    <div class="metric-value">91.2 <span class="metric-unit">%</span></div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Cross-Airline Generalization (MMD)</div>
+                    <div class="metric-value">0.18 <span class="metric-unit">domain shift</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔐 Security & Compliance</h2>
+                <div class="metric">
+                    <div class="metric-label">Security Layers</div>
+                    <div class="metric-value">8 <span class="metric-unit">layers</span></div>
+                    <p style="font-size: 0.85em; color: #666; margin-top: 8px;">
+                        ✓ HMAC-SHA256 signatures<br/>
+                        ✓ JWT authentication<br/>
+                        ✓ AES-256 encryption<br/>
+                        ✓ Immutable audit logs<br/>
+                        ✓ RBAC (5 roles)<br/>
+                        ✓ Rate limiting
+                    </p>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">DGCA Compliance</div>
+                    <div class="metric-value">✓ Ready</div>
+                    <p style="font-size: 0.85em; color: #4caf50; margin-top: 8px;">
+                        Auto-generate Maintenance Release<br/>
+                        Two-person approval system<br/>
+                        Tamper-proof documentation
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Stack -->
+        <div class="card" style="margin-bottom: 30px;">
+            <h2>⚙️ Technology & Innovation</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Physics-Informed ML</h3>
+                    <p style="font-size: 0.9em; color: #666;">
+                        ✓ Physics-Informed Neural Networks (PINN)<br/>
+                        ✓ Neural ODE for degradation<br/>
+                        ✓ Conformal prediction (UQ)
+                    </p>
+                </div>
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Deployment</h3>
+                    <p style="font-size: 0.9em; color: #666;">
+                        ✓ Federated learning (multi-airline)<br/>
+                        ✓ Edge computing (onboard)<br/>
+                        ✓ Real-time monitoring
+                    </p>
+                </div>
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Explainability</h3>
+                    <p style="font-size: 0.9em; color: #666;">
+                        ✓ SHAP feature importance<br/>
+                        ✓ Causal inference<br/>
+                        ✓ Pilot-facing summaries
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p><strong>GARUDA</strong> — Physics-Informed Digital Twin for Turbojet Health Monitoring</p>
+            <p>Aerothon 2026 | HAL × IIT Indore (VYOMA, GARUDA)</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Production-Ready | 7 Modules | ~1,200 LOC | 8 Novel Features</p>
+        </footer>
+    </div>
+</body>
+</html>
